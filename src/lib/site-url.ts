@@ -1,2 +1,3 @@
-// Set NEXT_PUBLIC_SITE_URL on deploy; without it canonical URLs, Open Graph and the sitemap point at localhost.
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+// Override with NEXT_PUBLIC_SITE_URL when a custom domain is configured.
+// Keep production metadata off localhost when the variable is missing in Vercel.
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://al-qadiri-website-musab17.vercel.app').replace(/\/$/, '');
