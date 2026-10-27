@@ -1,0 +1,188 @@
+/* label crossfade shared by both variants: "Add" slides up and out, "Added" slides in */
+.swap {
+  position: relative;
+  display: inline-grid;
+  overflow: hidden;
+}
+
+.face {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition:
+    transform var(--d-base) var(--ease-out),
+    opacity var(--d-base) var(--ease-out);
+}
+
+.face + .face {
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+[data-added] .face:first-child {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+
+[data-added] .face + .face {
+  transform: none;
+  opacity: 1;
+}
+
+.face svg {
+  width: 1.05em;
+  height: 1.05em;
+}
+
+/* ---------------------------------------------------------------- full */
+.full {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.segments {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  border: 1px solid var(--c-line-strong);
+}
+
+.indicator {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(100% / var(--count));
+  background: var(--c-ink);
+  transform: translateX(calc(100% * var(--index)));
+  transition: transform var(--d-base) var(--ease-out);
+}
+
+.segment {
+  position: relative;
+  min-height: 48px;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  background: transparent;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: color var(--d-base) var(--ease-out);
+}
+
+.segment[aria-checked='true'] {
+  color: var(--c-canvas);
+}
+
+.addButton {
+  width: 100%;
+}
+
+/* ------------------------------------------------------------- compact */
+/* The compact variant joins its parent's grid: the parent row must define grid areas "add" and "drawer". */
+.compact {
+  display: contents;
+}
+
+.compactButton {
+  grid-area: add;
+  justify-self: end;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 0.85rem;
+  border: 1px solid var(--c-line-strong);
+  background: transparent;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color var(--d-base) var(--ease-out),
+    border-color var(--d-base) var(--ease-out),
+    color var(--d-base) var(--ease-out),
+    transform var(--d-fast) var(--ease-out);
+}
+
+.compactButton:hover,
+.compact[data-open] .compactButton {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.compactButton[data-added] {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+.compactButton:active {
+  transform: translateY(1px);
+}
+
+.drawer {
+  grid-area: drawer;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--d-slow) var(--ease-out);
+}
+
+.compact[data-open] .drawer {
+  grid-template-rows: 1fr;
+}
+
+.drawerInner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 0;
+  opacity: 0;
+  transition:
+    opacity var(--d-base) var(--ease-out),
+    padding var(--d-slow) var(--ease-out);
+}
+
+.compact[data-open] .drawerInner {
+  padding-top: 0.5rem;
+  opacity: 1;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0 0.8rem;
+  border: 1px solid var(--c-accent);
+  background: transparent;
+  color: var(--c-ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color var(--d-base) var(--ease-out),
+    color var(--d-base) var(--ease-out);
+}
+
+.chip:hover {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+.chip svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.unavailable {
+  font: var(--t-small) var(--f-body);
+  color: var(--c-ink-2);
+  border: 1px solid var(--c-line);
+  padding: 0.45rem 0.85rem;
+  white-space: nowrap;
+}

@@ -1,0 +1,28 @@
+.frame {
+  width: 100%;
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 0.35rem;
+  padding: 1rem;
+  text-align: center;
+  font-size: var(--t-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(185, 172, 157, 0.55);
+  background:
+    linear-gradient(135deg, rgba(243, 236, 225, 0.03), rgba(243, 236, 225, 0) 60%),
+    var(--c-surface);
+}
+
+.placeholder span {
+  font-family: var(--f-display);
+  font-size: 1.25rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--c-ink-2);
+}

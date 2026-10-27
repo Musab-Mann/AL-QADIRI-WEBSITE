@@ -1,0 +1,300 @@
+.hero {
+  position: relative;
+  display: grid;
+  min-height: 100dvh;
+  isolation: isolate;
+  background: var(--c-canvas);
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* desktop: the 3D scene owns the right side and fades into the canvas */
+@media (min-width: 1024px) {
+  .media {
+    left: 30%;
+    mask-image: linear-gradient(to right, transparent 0%, #000 30%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 30%);
+  }
+}
+
+/* ------------------------------------------------------------- 3D scene */
+.stage {
+  position: absolute;
+  inset: 0;
+  perspective: 1300px;
+  perspective-origin: 50% 35%;
+}
+
+.space {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* slow idle sway: the photo turns a few degrees in real perspective */
+.orbit {
+  animation: orbit 14s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.hero[data-active] .orbit {
+  animation-play-state: running;
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotateY(-4deg) rotateX(2deg) translateZ(-10px);
+  }
+  50% {
+    transform: rotateY(0deg) rotateX(-1deg) translateZ(10px);
+  }
+  100% {
+    transform: rotateY(4deg) rotateX(1.5deg) translateZ(-6px);
+  }
+}
+
+/* a small bleed past the frame so gentle rotation never reveals the photo's edges */
+.parallax {
+  position: absolute;
+  inset: -4%;
+  transform-origin: 50% 45%;
+}
+
+.image {
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+/* ---------------------------------------------------------------- steam */
+.smoke {
+  position: absolute;
+  left: var(--smoke-x, 30%);
+  top: var(--smoke-y, 0%);
+  width: clamp(18rem, 34vw, 38rem);
+  height: 70%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+
+/* set by MotionDirector once the hero photo has loaded */
+.hero[data-loaded] .smoke {
+  opacity: 1;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.layerBack {
+  transform: translateZ(40px);
+}
+
+.layerMid {
+  transform: translateZ(110px);
+}
+
+.layerFront {
+  transform: translateZ(190px);
+}
+
+.wisp {
+  position: absolute;
+  bottom: 0;
+  left: var(--x);
+  width: var(--w);
+  aspect-ratio: 1 / 2;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0;
+  transform: translate3d(0, 25%, 0) scale(0.55);
+  animation: rise var(--dur) linear var(--delay) infinite;
+  animation-play-state: paused;
+  will-change: transform, opacity;
+}
+
+.hero[data-active] .wisp {
+  animation-play-state: running;
+}
+
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 25%, 0) scale(0.55) rotate(0deg);
+  }
+  16% {
+    opacity: var(--o);
+  }
+  62% {
+    opacity: calc(var(--o) * 0.75);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), -90%, 0) scale(1.5) rotate(var(--rot));
+  }
+}
+
+/* calmer, not switched off: slower sway and softer steam on reduce-motion devices */
+:global(html.calm) .orbit {
+  animation-duration: 24s;
+}
+
+:global(html.calm) .wisp {
+  animation-duration: calc(var(--dur) * 1.5);
+}
+
+/* darkens only the copy zone (lower left), leaving the dish untouched */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 0% 100%, rgba(21, 17, 14, 0.85) 0%, rgba(21, 17, 14, 0.4) 38%, rgba(21, 17, 14, 0) 70%),
+    linear-gradient(to bottom, rgba(21, 17, 14, 0.55) 0%, rgba(21, 17, 14, 0) 22%);
+  pointer-events: none;
+}
+
+/* closes in at the end of the pinned scroll story */
+.vignette {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(75% 75% at 60% 45%, rgba(21, 17, 14, 0) 35%, rgba(21, 17, 14, 0.8) 100%),
+    linear-gradient(to bottom, rgba(21, 17, 14, 0) 55%, rgba(21, 17, 14, 0.95) 100%);
+}
+
+.content {
+  display: grid;
+  align-items: end;
+  padding-top: calc(var(--header-h) + 2rem);
+  padding-bottom: clamp(2.5rem, 7vh, 5.5rem);
+}
+
+.copy {
+  max-width: 36rem;
+}
+
+.eyebrow {
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-size: clamp(3.25rem, 1.6rem + 5.6vw, 7rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  margin-top: 1.5rem;
+  max-width: 30rem;
+  font-size: var(--t-body-lg);
+  line-height: 1.6;
+  color: var(--c-ink-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+/* before-paint from-states (html.motion is set only when motion is allowed);
+   the failsafe reveals everything if the animation script never runs */
+:global(html.motion) .title [data-line] > span {
+  transform: translateY(110%);
+  animation: failsafe 0s 2.2s forwards;
+}
+
+:global(html.motion) [data-hero-fade] {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: failsafe 0s 2.2s forwards;
+}
+
+@keyframes failsafe {
+  to {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+}
+
+/* mobile: scene on top, copy below on the canvas, nothing overlaps */
+@media (max-width: 767px) {
+  .hero {
+    min-height: auto;
+    grid-template-rows: auto auto;
+  }
+
+  .media {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    aspect-ratio: 4 / 3;
+    max-height: 46svh;
+    width: 100%;
+    margin-top: var(--header-h);
+  }
+
+  .smoke {
+    width: 70%;
+    height: 90%;
+  }
+
+  .stage {
+    animation: mobileScene 10s ease-in-out infinite alternate;
+    transform-origin: 50% 45%;
+    will-change: transform;
+  }
+
+  .layerBack {
+    display: none;
+  }
+
+  .title {
+    font-size: clamp(2.75rem, 1.6rem + 6vw, 3.75rem);
+  }
+
+  .body {
+    margin-top: 1rem;
+    font-size: 1.0625rem;
+  }
+
+  .actions {
+    margin-top: 1.5rem;
+  }
+
+  .scrim {
+    background: linear-gradient(to top, rgba(21, 17, 14, 1) 0%, rgba(21, 17, 14, 0) 35%);
+  }
+
+  .content {
+    padding-top: 0.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .actions :global(.btn) {
+    flex: 1 1 100%;
+  }
+}
+
+@keyframes mobileScene {
+  from {
+    transform: translate3d(-1.5%, 0, 0) scale(1.01);
+  }
+  to {
+    transform: translate3d(1.5%, -1%, 0) scale(1.045);
+  }
+}

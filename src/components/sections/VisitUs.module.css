@@ -1,0 +1,96 @@
+.band {
+  background: var(--c-green);
+  padding-block: var(--section);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 3vw, 3rem);
+  align-items: end;
+}
+
+.lead {
+  grid-column: 1 / span 7;
+}
+
+.title {
+  margin-top: 1rem;
+  font-size: var(--t-display);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+
+.address {
+  margin-top: 1.5rem;
+  max-width: 28ch;
+  font-style: normal;
+  font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+}
+
+.list {
+  grid-column: 8 / span 5;
+  border-top: 1px solid rgba(243, 236, 225, 0.18);
+}
+
+.list li {
+  border-bottom: 1px solid rgba(243, 236, 225, 0.18);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 60px;
+  padding-block: 0.75rem;
+  transition: padding var(--d-slow) var(--ease-out);
+}
+
+.item svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.kind {
+  font-weight: 500;
+}
+
+.value {
+  color: var(--c-ink-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    padding-left: 0.5rem;
+  }
+
+  .item:hover .kind {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+}
+
+@media (max-width: 1023px) {
+  .lead,
+  .list {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 767px) {
+  .item {
+    grid-template-columns: 1.5rem 1fr;
+  }
+
+  .value {
+    grid-column: 2;
+    text-align: left;
+    font-size: var(--t-small);
+  }
+}

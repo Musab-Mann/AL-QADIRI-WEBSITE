@@ -1,0 +1,304 @@
+.section {
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.title {
+  font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+}
+
+.hint {
+  margin-top: 0.75rem;
+  color: var(--c-ink-2);
+}
+
+/* ------------------------------------------------------------ controls */
+.shell {
+  display: grid;
+  /* one column pinned to the section width: the strip's wide scrolling content must not stretch it */
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.stage {
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  flex: none;
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  min-height: 52px;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--c-line);
+  background: transparent;
+  color: var(--c-ink-2);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition:
+    border-color var(--d-base) var(--ease-out),
+    background-color var(--d-base) var(--ease-out),
+    color var(--d-base) var(--ease-out);
+}
+
+.tab:hover {
+  color: var(--c-ink);
+  border-color: var(--c-line-strong);
+}
+
+.tab[aria-selected='true'] {
+  border-color: var(--c-accent);
+  background: rgba(192, 122, 69, 0.14);
+  color: var(--c-ink);
+}
+
+.tabUr {
+  font-size: 0.75rem;
+  line-height: 1.7;
+  padding-bottom: 0;
+  color: var(--c-ink-2);
+}
+
+.arrows {
+  display: flex;
+  flex: none;
+  gap: 0.5rem;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--c-line-strong);
+  background: transparent;
+  color: var(--c-ink);
+  cursor: pointer;
+  transition:
+    border-color var(--d-base) var(--ease-out),
+    color var(--d-base) var(--ease-out),
+    transform var(--d-fast) var(--ease-out);
+}
+
+.arrow:hover {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.arrow:active {
+  transform: translateY(1px);
+}
+
+.arrow svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* --------------------------------------------------------------- strip */
+.stage {
+  --card-w: clamp(15.5rem, 24vw, 21rem);
+  position: relative;
+}
+
+.viewport {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* the first and last card can reach the centre */
+  padding: 2rem calc(50% - var(--card-w) / 2) 2.5rem;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+  outline-offset: -4px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+.viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.viewport[data-dragging] {
+  scroll-snap-type: none;
+  cursor: grabbing;
+  user-select: none;
+}
+
+.track {
+  display: flex;
+  gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  width: max-content;
+}
+
+.card {
+  --o: 0;
+  --a: 0;
+  flex: none;
+  width: var(--card-w);
+  scroll-snap-align: center;
+  animation: cardIn 700ms var(--ease-out) both;
+  animation-delay: calc(min(var(--i), 8) * 55ms);
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    translate: 0 36px;
+  }
+}
+
+/* coverflow: side cards turn toward the centre and sink back; the centre card is flat and forward */
+.cardInner {
+  display: grid;
+  height: 100%;
+  background: var(--c-surface);
+  transform: perspective(1100px) rotateY(calc(var(--o) * -26deg)) translateZ(calc(var(--a) * -110px))
+    scale(calc(1 - var(--a) * 0.06));
+  opacity: calc(1 - var(--a) * 0.4);
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--c-canvas);
+}
+
+.media img {
+  object-fit: cover;
+  transition: transform var(--d-slow) var(--ease-out);
+  -webkit-user-drag: none;
+}
+
+.cardInner:hover .media img {
+  transform: scale(1.05);
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem 1.15rem;
+}
+
+.cat {
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-ink-2);
+}
+
+.name {
+  font-family: var(--f-display);
+  font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.name a:hover {
+  color: var(--c-accent);
+}
+
+.urdu {
+  justify-self: start;
+  color: var(--c-ink-2);
+  font-size: 0.875rem;
+}
+
+.buy {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'price add'
+    'drawer drawer';
+  align-items: center;
+  column-gap: 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.buy > :global(span[aria-label]) {
+  grid-area: price;
+}
+
+.progress {
+  height: 2px;
+  margin-top: -1rem;
+  background: var(--c-line);
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--c-accent);
+  transform-origin: left;
+  transform: scaleX(max(var(--progress, 0), 0.04));
+  transition: transform 120ms linear;
+}
+
+@media (max-width: 767px) {
+  .head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stage {
+    --card-w: 74vw;
+  }
+
+  .arrows {
+    display: none;
+  }
+
+  .viewport {
+    padding-block: 1.5rem 2rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .cardInner {
+    transform: perspective(900px) rotateY(calc(var(--o) * -22deg)) translateZ(calc(var(--a) * -80px))
+      scale(calc(1 - var(--a) * 0.05));
+  }
+}
+
+/* reduce-motion devices keep the 3D strip, turned less far */
+:global(html.calm) .cardInner {
+  transform: perspective(1100px) rotateY(calc(var(--o) * -14deg)) translateZ(calc(var(--a) * -60px));
+}

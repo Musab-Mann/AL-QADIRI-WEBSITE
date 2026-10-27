@@ -1,0 +1,379 @@
+.footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--c-line);
+  background:
+    radial-gradient(90% 60% at 85% 20%, rgba(192, 122, 69, 0.08), rgba(192, 122, 69, 0) 60%),
+    var(--c-canvas);
+}
+
+/* ---------------------------------------------------------------- ticker */
+.ticker {
+  display: block;
+  overflow: hidden;
+  padding-block: clamp(1.25rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--c-line);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  animation: ticker 45s linear infinite;
+  will-change: transform;
+}
+
+/* always moving; pauses off screen (set by MotionDirector) and on hover or keyboard focus */
+.ticker[data-offscreen] .track,
+.ticker:hover .track,
+.ticker:focus-visible .track {
+  animation-play-state: paused;
+}
+
+.run {
+  display: flex;
+  flex: none;
+}
+
+.dish {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  padding-right: clamp(1.5rem, 3vw, 2.75rem);
+  font-family: var(--f-display);
+  font-size: clamp(1.75rem, 1.2rem + 2.2vw, 3.25rem);
+  font-style: italic;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: var(--c-ink-2);
+  transition: color var(--d-base) var(--ease-out);
+}
+
+.dish::after {
+  content: '';
+  width: clamp(1.25rem, 2.5vw, 2.25rem);
+  height: 1px;
+  background: var(--c-accent);
+}
+
+.dish:hover,
+.dish:focus-visible {
+  color: var(--c-accent) !important;
+}
+
+.ticker:hover .dish {
+  color: var(--c-ink);
+}
+
+.ticker:focus-within .track {
+  animation-play-state: paused;
+}
+
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* reduce-motion devices: still moving, just slower (client decision 2026-09-19) */
+:global(html.calm) .track {
+  animation-duration: 75s;
+}
+
+/* ----------------------------------------------------------- order panel */
+.order {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 2.5rem clamp(1.5rem, 3vw, 3rem);
+  align-items: center;
+  padding-block: clamp(4rem, 9vw, 8rem);
+}
+
+.orderText {
+  grid-column: 1 / span 7;
+  display: grid;
+  justify-items: start;
+  gap: 1.75rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(192, 122, 69, 0.45);
+  font-size: var(--t-small);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.badge svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--c-accent);
+}
+
+.orderTitle {
+  font-size: clamp(3.25rem, 1.8rem + 6vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.orderTitle em {
+  display: block;
+  padding-bottom: 0.08em;
+  font-style: italic;
+  color: var(--c-accent);
+}
+
+.orderActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.card {
+  grid-column: 9 / span 4;
+  display: grid;
+  gap: 1.75rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid rgba(192, 122, 69, 0.45);
+  background: linear-gradient(160deg, rgba(192, 122, 69, 0.1), rgba(33, 26, 21, 0.6) 55%);
+}
+
+.cardHead {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.cardIcon {
+  width: 3rem;
+  height: 3rem;
+  color: var(--c-accent);
+}
+
+.cardTitle {
+  font-family: var(--f-display);
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  line-height: 1.05;
+}
+
+.cardList {
+  border-top: 1px solid var(--c-line);
+}
+
+.cardList li {
+  border-bottom: 1px solid var(--c-line);
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr auto;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 56px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition:
+    color var(--d-base) var(--ease-out),
+    padding var(--d-slow) var(--ease-out);
+}
+
+.cardRow svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  color: var(--c-accent);
+}
+
+.cardArrow {
+  color: var(--c-ink-2) !important;
+  transition: transform var(--d-slow) var(--ease-out);
+}
+
+.cardRow:hover {
+  padding-left: 0.4rem;
+  color: var(--c-accent);
+}
+
+.cardRow:hover .cardArrow {
+  transform: translate(3px, -3px);
+}
+
+/* --------------------------------------------------------------- details */
+.grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 0.8fr auto;
+  gap: 2.5rem clamp(1.5rem, 3vw, 3rem);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--c-line);
+}
+
+.address {
+  margin-top: 1rem;
+  max-width: 26ch;
+  font-style: normal;
+  line-height: 1.6;
+}
+
+.iconLink {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  transition: color var(--d-base) var(--ease-out);
+}
+
+.iconLink:hover,
+.links a:hover {
+  color: var(--c-accent);
+}
+
+.iconLink svg {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.2em;
+  color: var(--c-accent);
+}
+
+.links {
+  display: grid;
+  margin-top: 0.5rem;
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--d-base) var(--ease-out);
+}
+
+.links .iconLink {
+  align-items: center;
+}
+
+.links .iconLink svg {
+  margin-top: 0;
+}
+
+.navLinks {
+  grid-template-columns: repeat(2, auto);
+  justify-content: start;
+  column-gap: 2rem;
+}
+
+.top {
+  justify-self: end;
+}
+
+.topLink {
+  display: inline-grid;
+  justify-items: center;
+  gap: 0.5rem;
+  font-size: var(--t-small);
+  color: var(--c-ink-2);
+  transition: color var(--d-base) var(--ease-out);
+}
+
+.topLink svg {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.8rem;
+  border: 1px solid var(--c-line-strong);
+  color: var(--c-ink);
+  transition:
+    transform var(--d-slow) var(--ease-out),
+    border-color var(--d-base) var(--ease-out),
+    background-color var(--d-base) var(--ease-out);
+}
+
+.topLink:hover {
+  color: var(--c-ink);
+}
+
+.topLink:hover svg {
+  transform: translateY(-4px);
+  border-color: var(--c-accent);
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+/* ------------------------------------------------------------- signature */
+.signature {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: clamp(1rem, 3vw, 2rem);
+  user-select: none;
+}
+
+.bigName {
+  font-family: var(--f-display);
+  font-size: clamp(5rem, 2rem + 16vw, 17rem);
+  font-weight: 600;
+  line-height: 0.78;
+  letter-spacing: -0.035em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(243, 236, 225, 0.22);
+  background: linear-gradient(to top, rgba(192, 122, 69, 0.18), rgba(192, 122, 69, 0) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.bigArabic {
+  padding-bottom: 0.6rem;
+  font-size: clamp(1.5rem, 1rem + 2.5vw, 3.5rem);
+  line-height: 1.2;
+  color: rgba(243, 236, 225, 0.35);
+}
+
+.base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--c-line);
+  font-size: var(--t-small);
+  color: var(--c-ink-2);
+}
+
+@media (max-width: 1023px) {
+  .orderText {
+    grid-column: 1 / span 7;
+  }
+
+  .card {
+    grid-column: 8 / span 5;
+  }
+
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .top {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .orderText,
+  .card {
+    grid-column: 1 / -1;
+  }
+
+  .orderActions :global(.btn) {
+    flex: 1 1 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .signature {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

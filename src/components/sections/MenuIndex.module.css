@@ -1,0 +1,112 @@
+.section {
+  background: var(--c-surface);
+}
+
+.title {
+  max-width: 18ch;
+  font-size: var(--t-display);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+}
+
+.list {
+  position: relative;
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  border-top: 1px solid var(--c-line);
+}
+
+.row {
+  border-bottom: 1px solid var(--c-line);
+}
+
+.link {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: clamp(1rem, 2.2vw, 1.6rem);
+  transition: padding var(--d-slow) var(--ease-out), color var(--d-base) var(--ease-out);
+}
+
+.urdu {
+  justify-self: start;
+  color: var(--c-ink-2);
+  font-size: 1rem;
+}
+
+.name {
+  font-family: var(--f-display);
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3.25rem);
+  line-height: 1.05;
+}
+
+.count {
+  font-size: var(--t-small);
+  color: var(--c-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.arrow {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--c-ink-2);
+  transition: transform var(--d-slow) var(--ease-out), color var(--d-base) var(--ease-out);
+}
+
+.preview {
+  position: absolute;
+  top: 50%;
+  right: 12%;
+  width: clamp(14rem, 22vw, 20rem);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) scale(0.94);
+  transition:
+    opacity var(--d-base) var(--ease-out),
+    transform var(--d-slow) var(--ease-out);
+}
+
+.preview img {
+  object-fit: cover;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .link {
+    padding-left: 1rem;
+    color: var(--c-accent);
+  }
+
+  .row:hover .arrow {
+    color: var(--c-accent);
+    transform: rotate(45deg);
+  }
+
+  .row:hover .preview {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@media (max-width: 767px) {
+  .title {
+    font-size: clamp(2.5rem, 1.5rem + 5vw, 3.25rem);
+  }
+
+  .link {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .urdu {
+    font-size: 0.875rem;
+  }
+
+  .arrow {
+    display: none;
+  }
+
+  .preview {
+    display: none;
+  }
+}
