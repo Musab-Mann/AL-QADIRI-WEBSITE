@@ -1,5 +1,5 @@
 # The published site is the public menu only. None of this belongs on it.
-data/
+/data/
 assets-source/
 public/uploads/
 *.cmd
